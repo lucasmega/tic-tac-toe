@@ -7,16 +7,15 @@
 </ion-header>
 
 <ion-content>
-  <div class="join-room" *ngIf="!readyToPlay && !roomFullMessage">
-    <h2>Entrar em uma Sala</h2>
-    <ion-button (click)="joinRoom()">Entrar</ion-button>
-  </div>
+
   <div *ngIf="roomFullMessage" class="room-full-message">
     {{ roomFullMessage }}
   </div>
+
   <div *ngIf="assignedSymbolMessage" class="assigned-symbol-message">
     {{ assignedSymbolMessage }}
   </div>
+
   <div class="board" *ngIf="playerSymbol && readyToPlay">
     <div 
       class="cell" 
@@ -28,6 +27,7 @@
       {{ cell }}
     </div>
   </div>
+
   <div class="controls" *ngIf="playerSymbol && readyToPlay">
     <ion-button (click)="resetGame()">Novo Jogo</ion-button>
   </div>

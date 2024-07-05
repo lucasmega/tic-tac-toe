@@ -41,11 +41,6 @@ export class HomePage implements OnInit {
     });
   }
 
-  joinRoom() {
-    this.roomFullMessage = '';
-    this.gameService.connect('ws://localhost:8080');
-  }
-
   makeMove(index: number): void {
     if (this.board[index] === '' && this.playerSymbol === this.currentPlayer) {
       this.board[index] = this.currentPlayer;
