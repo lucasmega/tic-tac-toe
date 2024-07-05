@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Jogo da Velha
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="symbol-selection" *ngIf="!playerSymbol">
+    <h2>Escolha seu símbolo</h2>
+    <ion-button (click)="chooseSymbol('X')">X</ion-button>
+    <ion-button (click)="chooseSymbol('O')">O</ion-button>
+  </div>
+
+  <div *ngIf="assignedSymbolMessage" class="assigned-symbol-message">
+    {{ assignedSymbolMessage }}
+  </div>
+
+  <div class="board" *ngIf="playerSymbol">
+    <div 
+      class="cell" 
+      *ngFor="let cell of board; let i = index" 
+      (click)="makeMove(i)" 
+      [attr.aria-label]="'Cell ' + (i + 1)"
+      role="button"
+      tabindex="0">
+      {{ cell }}
+    </div>
+  </div>
+  <div class="controls" *ngIf="playerSymbol">
+    <ion-button (click)="resetGame()">Novo Jogo</ion-button>
+  </div>
+</ion-content>
