@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  Object = Object;
   board: string[] = Array(9).fill('');
   currentPlayer: string = 'X';
   playerId: string = uuidv4();
@@ -17,6 +18,7 @@ export class HomePage implements OnInit {
   roomFullMessage: string = '';
   userCount: number = 0;
   readyToPlay: boolean = false;
+  scores: { [key: string]: number } = {};
 
   constructor(private gameService: GameService) {}
 
@@ -45,21 +47,19 @@ export class HomePage implements OnInit {
     if (this.board[index] === '' && this.playerSymbol === this.currentPlayer) {
       this.board[index] = this.currentPlayer;
       this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
-      const gameState = new GameState([...this.board], this.currentPlayer, { ...this.getCurrentPlayers(), [this.playerId]: this.playerSymbol });
+      const gameState = new GameState([...this.board], this.currentPlayer, { ...this.getCurrentPlayers(), [this.playerId]: this.playerSymbol }, this.scores);
       this.gameService.sendGameState(gameState);
     }
   }
 
   resetGame(): void {
-    this.assignedSymbolMessage = '';
-    this.playerSymbol = '';
-    this.readyToPlay = false;
     this.gameService.resetGame();
   }
 
   private updateGameState(gameState: GameState): void {
     this.board = gameState.board;
     this.currentPlayer = gameState.currentPlayer;
+    this.scores = gameState.scores || {};
     if (gameState.players[this.playerId]) {
       this.playerSymbol = gameState.players[this.playerId];
     }
