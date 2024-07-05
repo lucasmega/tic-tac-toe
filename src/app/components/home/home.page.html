@@ -7,12 +7,9 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="roomFullMessage" class="room-full-message">
-    {{ roomFullMessage }}
-  </div>
-  <div *ngIf="assignedSymbolMessage" class="assigned-symbol-message">
-    {{ assignedSymbolMessage }}
-  </div>
+  <div *ngIf="roomFullMessage" class="room-full-message">{{ roomFullMessage }}</div>
+  <div *ngIf="assignedSymbolMessage" class="assigned-symbol-message">{{ assignedSymbolMessage }}</div>
+
   <div class="board" *ngIf="playerSymbol && readyToPlay">
     <div 
       class="cell" 
@@ -24,13 +21,16 @@
       {{ cell }}
     </div>
   </div>
+
   <div class="scores" *ngIf="readyToPlay">
     <h3>Pontuação:</h3>
     <div *ngFor="let id of Object.keys(scores)">
       <p>Jogador {{ id }}: {{ scores[id] }} vitória(s)</p>
     </div>
   </div>
+
   <div class="controls" *ngIf="playerSymbol && readyToPlay">
     <ion-button (click)="resetGame()">Novo Jogo</ion-button>
   </div>
+
 </ion-content>
