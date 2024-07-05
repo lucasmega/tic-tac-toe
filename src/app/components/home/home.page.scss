@@ -1,4 +1,4 @@
-.symbol-selection {
+.join-room, .symbol-selection, .waiting-for-player-message, .assigned-symbol-message {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -42,11 +42,4 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
-}
-
-.assigned-symbol-message {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 1.2em;
-  color: #ff0000;
 }
