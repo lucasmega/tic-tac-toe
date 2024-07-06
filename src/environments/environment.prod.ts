@@ -8,5 +8,6 @@ export const environment = {
     messagingSenderId: "865175453582",
     appId: "1:865175453582:web:2fb3dc5c3a4b4b41782edf",
     measurementId: "G-DH0L5XGTMC"
-  }
+  },
+  webSocket: "https://tic-tac-toe-web-socket.onrender.com"
 };

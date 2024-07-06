@@ -12,7 +12,8 @@ export const environment = {
     messagingSenderId: "your-dev-sender-id",
     appId: "your-dev-app-id",
     measurementId: "your-dev-measurement-id"
-  }
+  },
+  webSocket: "ws://localhost:8080"
 };
 
 
