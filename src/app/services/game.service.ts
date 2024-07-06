@@ -16,8 +16,8 @@ export class GameService {
   roomFull$ = this.roomFullSubject.asObservable();
   userCount$ = this.userCountSubject.asObservable();
 
-  connect(url: string): void {
-    this.ws = new WebSocket(url);
+  connect(): void {
+    this.ws = new WebSocket('ws://localhost:8080');
 
     this.ws.onopen = () => {
       console.log('Connected to WebSocket server');

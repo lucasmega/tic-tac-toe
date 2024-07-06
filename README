@@ -1,0 +1,8 @@
+Comando para rodar o aplicativo em modo de produção:
+ionic serve --configuration production
+
+Comando para fazer o build do aplicativo para produção:
+ionic build --prod
+
+Comando para rodar o aplicativo em modo de desenvolvimento:
+ionic serve --configuration development

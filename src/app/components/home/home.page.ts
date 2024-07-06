@@ -87,7 +87,7 @@ export class HomePage implements OnInit {
   }
 
   private connectToGameService(): void {
-    this.gameService.connect('ws://localhost:8080');
+    this.gameService.connect();
   }
 
   private subscribeToGameState(): void {
