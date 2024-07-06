@@ -1,45 +1,104 @@
-.join-room, .symbol-selection, .waiting-for-player-message, .assigned-symbol-message {
+.join-room,
+.symbol-selection,
+.waiting-for-player-message,
+.assigned-symbol-message {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
   margin-top: 20px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 
   ion-button {
     margin: 10px;
   }
 }
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  width: 300px;
-  margin: 20px auto;
+.scores {
+  h3 {
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+  }
 }
+
+.board {
+  gap: 0px;
+  width: 300px;
+  display: grid;
+  margin: 20px auto;
+  border-radius: 15px;
+  background-color: #233c46;
+  grid-template-columns: repeat(3, 1fr);
+
+  span {
+    font-size: 40px;
+    font-weight: 700;
+  }
+}
+.text-blue { color: #FFF; }
+.text-red { color: #FF0000; }
 
 .cell {
   width: 100px;
   height: 100px;
   display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 2em;
-  border: 1px solid #000;
   cursor: pointer;
   user-select: none;
+  align-items: center;
+  box-sizing: border-box;
+  justify-content: center;
+}
 
-  &:hover {
-    background-color: #f0f0f0;
-  }
+.cell:nth-child(1),
+.cell:nth-child(2),
+.cell:nth-child(4),
+.cell:nth-child(5),
+.cell:nth-child(7),
+.cell:nth-child(8) {
+  border-right: 5px solid #6e8b90;
+}
 
-  &:focus {
-    outline: 2px solid #000;
-  }
+.cell:nth-child(1),
+.cell:nth-child(2),
+.cell:nth-child(3),
+.cell:nth-child(4),
+.cell:nth-child(5),
+.cell:nth-child(6) {
+  border-bottom: 5px solid #6e8b90;
 }
 
 .controls {
   display: flex;
-  justify-content: center;
   margin-top: 20px;
+  justify-content: center;
+  button {
+    color: #fff;
+    background-color: #233c46;
+    width: 300px;
+    height: 40px;
+    border-radius: 10px;
+    text-transform: uppercase;
+  }
+}
+
+.card-player {
+  display: flex;
+    justify-items: center;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: center;
+    div {
+      border: solid 1px;
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      text-align: center;
+      background-color: #233c46;
+      border-radius: 5px;
+      span {
+        font-size: 40px;
+        font-weight: 700;
+      }
+    }
 }

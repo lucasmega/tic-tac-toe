@@ -19,28 +19,38 @@ export class HomePage implements OnInit {
   userCount: number = 0;
   readyToPlay: boolean = false;
   scores: { [key: string]: number } = {};
+  symbols: string[] = [];
+  displayScores: { [key: string]: number } = {};
 
   constructor(private gameService: GameService) {}
 
   ngOnInit() {
-    this.gameService.connect('ws://localhost:8080');
-    this.gameService.gameState$.subscribe((gameState: GameState) => {
-      this.updateGameState(gameState);
+    this.connectToGameService();
+    this.subscribeToGameState();
+    this.subscribeToSymbolAssignment();
+    this.subscribeToRoomFull();
+    this.subscribeToUserCount();
+
+    this.gameService.gameState$.subscribe(state => {
+       this.symbols = this.extractSymbols(state.players) 
+       this.displayScores = this.createDisplayScores(state.players, state.scores);
     });
-    this.gameService.assignSymbol$.subscribe((symbol: string) => {
-      this.playerSymbol = symbol;
-      this.assignedSymbolMessage = `Você foi atribuído o símbolo ${symbol}`;
-      this.readyToPlay = true;
-    });
-    this.gameService.roomFull$.subscribe(() => {
-      this.roomFullMessage = 'A sala está cheia. Tente novamente mais tarde.';
-    });
-    this.gameService.userCount$.subscribe((count: number) => {
-      this.userCount = count;
-      if (this.userCount < 2) {
-        this.readyToPlay = false;
+
+  }
+
+  createDisplayScores(players: { [key: string]: string }, scores: { [key: string]: number }): { [key: string]: number } {
+    const displayScores: { [key: string]: number } = {};
+    for (const playerId in players) {
+      if (players.hasOwnProperty(playerId)) {
+        const symbol = players[playerId];
+        displayScores[symbol] = scores[playerId];
       }
-    });
+    }
+    return displayScores;
+  }
+
+  extractSymbols(players: {[key: string]: string}): string[] {
+    return this.Object.values(players);
   }
 
   makeMove(index: number): void {
@@ -50,6 +60,7 @@ export class HomePage implements OnInit {
       const gameState = new GameState([...this.board], this.currentPlayer, { ...this.getCurrentPlayers(), [this.playerId]: this.playerSymbol }, this.scores);
       this.gameService.sendGameState(gameState);
     }
+    console.log(this)
   }
 
   resetGame(): void {
@@ -63,9 +74,7 @@ export class HomePage implements OnInit {
     if (gameState.players[this.playerId]) {
       this.playerSymbol = gameState.players[this.playerId];
     }
-    if (Object.keys(gameState.players).length === 2) {
-      this.readyToPlay = true;
-    }
+    this.readyToPlay = Object.keys(gameState.players).length === 2;
   }
 
   private getCurrentPlayers(): { [key: string]: string } {
@@ -75,5 +84,36 @@ export class HomePage implements OnInit {
       }
       return players;
     }, {} as { [key: string]: string });
+  }
+
+  private connectToGameService(): void {
+    this.gameService.connect('ws://localhost:8080');
+  }
+
+  private subscribeToGameState(): void {
+    this.gameService.gameState$.subscribe((gameState: GameState) => {
+      this.updateGameState(gameState);
+    });
+  }
+
+  private subscribeToSymbolAssignment(): void {
+    this.gameService.assignSymbol$.subscribe((symbol: string) => {
+      this.playerSymbol = symbol;
+      this.assignedSymbolMessage = `Você foi atribuído o símbolo ${symbol}`;
+      this.readyToPlay = true;
+    });
+  }
+
+  private subscribeToRoomFull(): void {
+    this.gameService.roomFull$.subscribe(() => {
+      this.roomFullMessage = 'A sala está cheia. Tente novamente mais tarde.';
+    });
+  }
+
+  private subscribeToUserCount(): void {
+    this.gameService.userCount$.subscribe((count: number) => {
+      this.userCount = count;
+      this.readyToPlay = this.userCount >= 2;
+    });
   }
 }

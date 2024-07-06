@@ -60,4 +60,5 @@ export class GameService {
       console.log('WebSocket is not open. Ready state:', this.ws.readyState);
     }
   }
+
 }

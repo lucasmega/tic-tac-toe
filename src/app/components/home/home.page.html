@@ -1,36 +1,40 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Jogo da Velha
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+  <div class="scores" *ngIf="readyToPlay">
+    <h3>Pontuação</h3>
+  </div>
 
 <ion-content>
-  <div *ngIf="roomFullMessage" class="room-full-message">{{ roomFullMessage }}</div>
-  <div *ngIf="assignedSymbolMessage" class="assigned-symbol-message">{{ assignedSymbolMessage }}</div>
+  <div class="card-player">
+    @for (symbol of symbols; track $index) {
+        <div>
+          <span [ngClass]="{ 'text-red': symbol === 'X', 'text-blue': symbol === 'O' }">{{symbol}}</span>
+        </div>
+        @if (symbol == 'X') {
+          <label>{{displayScores['X']}}</label>
+        } @else {
+          <label>{{displayScores['O']}}</label>
+        }
+      }
+  </div>
 
-  <div class="board" *ngIf="playerSymbol && readyToPlay">
-    <div 
-      class="cell" 
-      *ngFor="let cell of board; let i = index" 
-      (click)="makeMove(i)" 
-      [attr.aria-label]="'Cell ' + (i + 1)"
-      role="button"
-      tabindex="0">
-      {{ cell }}
+    @if (roomFullMessage) {
+    <div class="room-full-message">{{ roomFullMessage }}</div>
+    }
+  
+    @if (assignedSymbolMessage) {
+    <div class="assigned-symbol-message">{{ assignedSymbolMessage }}</div>
+    }
+  
+    @if (playerSymbol && readyToPlay) {
+    <div class="board">
+      <div class="cell" *ngFor="let cell of board; let i = index" (click)="makeMove(i)" [attr.aria-label]="'Cell ' + (i + 1)" role="button" tabindex="0">
+        <span [ngClass]="{ 'text-red': cell === 'X', 'text-blue': cell === 'O' }">{{ cell }}</span>
+      </div>
     </div>
-  </div>
+    } @else {
+    <p>Esperando jogador</p>
+    }
 
-  <div class="scores" *ngIf="readyToPlay">
-    <h3>Pontuação:</h3>
-    <div *ngFor="let id of Object.keys(scores)">
-      <p>Jogador {{ id }}: {{ scores[id] }} vitória(s)</p>
+    <div class="controls" *ngIf="playerSymbol && readyToPlay">
+      <button (click)="resetGame()">Novo Jogo</button>
     </div>
-  </div>
-
-  <div class="controls" *ngIf="playerSymbol && readyToPlay">
-    <ion-button (click)="resetGame()">Novo Jogo</ion-button>
-  </div>
-
-</ion-content>
+  </ion-content>
