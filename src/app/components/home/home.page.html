@@ -1,5 +1,5 @@
   <div class="scores" *ngIf="readyToPlay">
-    <h3>Pontuação</h3>
+    <h3>Jogo da Velha</h3>
   </div>
 
 <ion-content>
@@ -8,11 +8,8 @@
         <div>
           <span [ngClass]="{ 'text-red': symbol === 'X', 'text-blue': symbol === 'O' }">{{symbol}}</span>
         </div>
-        @if (symbol == 'X') {
-          <label>{{displayScores['X']}}</label>
-        } @else {
-          <label>{{displayScores['O']}}</label>
-        }
+        @if (symbol == 'X') { <label>{{ _displayScores['X'] }}</label> }
+        @if (symbol == 'O') { <label>{{ _displayScores['O'] }}</label> }
       }
   </div>
 

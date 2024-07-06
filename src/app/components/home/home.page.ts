@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 import { GameService } from '../../services/game.service';
 import { GameState } from '../../models/game-state.model';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   Object = Object;
   board: string[] = Array(9).fill('');
   currentPlayer: string = 'X';
@@ -20,9 +21,14 @@ export class HomePage implements OnInit {
   readyToPlay: boolean = false;
   scores: { [key: string]: number } = {};
   symbols: string[] = [];
-  displayScores: { [key: string]: number } = {};
+  _displayScores: { [key: string]: number } = { X: 0, O: 0 };
+  previousScores: { [key: string]: number } = { X: 0, O: 0 };
 
-  constructor(private gameService: GameService) {}
+  constructor(private gameService: GameService, private alertController: AlertController) {}
+
+  ngOnDestroy(): void {
+    this.previousScores = { X: 0, O: 0 };
+  }
 
   ngOnInit() {
     this.connectToGameService();
@@ -41,9 +47,11 @@ export class HomePage implements OnInit {
    * @param players - Objeto contendo os jogadores e seus símbolos.
    * @param scores - Objeto contendo as pontuações dos jogadores.
    */
-  private updateSymbolsAndScores(players: { [key: string]: string }, scores: { [key: string]: number }): void {
+  public updateSymbolsAndScores(players: { [key: string]: string }, scores: { [key: string]: number }): void {
     this.symbols = this.extractSymbols(players);
-    this.displayScores = this.createDisplayScores(players, scores);
+    this._displayScores = this.createDisplayScores(players, scores);
+    this.checkWinner(this._displayScores['X'], 'X');
+    this.checkWinner(this._displayScores['O'], 'O');
   }
 
   /**
@@ -52,8 +60,8 @@ export class HomePage implements OnInit {
    * @param scores - Objeto contendo as pontuações dos jogadores.
    * @returns Objeto de pontuações a serem exibidas.
    */
-  private createDisplayScores(players: { [key: string]: string }, scores: { [key: string]: number }): { [key: string]: number } {
-    const displayScores: { [key: string]: number } = {};
+  public createDisplayScores(players: { [key: string]: string }, scores: { [key: string]: number }): { [key: string]: number } {
+    const displayScores: { [key: string]: number } = { X: 0, O: 0 };
     for (const playerId in players) {
       if (players.hasOwnProperty(playerId)) {
         const symbol = players[playerId];
@@ -68,7 +76,7 @@ export class HomePage implements OnInit {
    * @param players - Objeto contendo os jogadores e seus símbolos.
    * @returns Array de símbolos dos jogadores.
    */
-  private extractSymbols(players: { [key: string]: string }): string[] {
+  public extractSymbols(players: { [key: string]: string }): string[] {
     return this.Object.values(players);
   }
 
@@ -83,7 +91,6 @@ export class HomePage implements OnInit {
       const gameState = new GameState([...this.board], this.currentPlayer, { ...this.getCurrentPlayers(), [this.playerId]: this.playerSymbol }, this.scores);
       this.gameService.sendGameState(gameState);
     }
-    console.log(this);
   }
 
   /**
@@ -112,7 +119,7 @@ export class HomePage implements OnInit {
    * @returns Objeto contendo os jogadores e seus símbolos.
    */
   private getCurrentPlayers(): { [key: string]: string } {
-    return this.board.reduce((players, cell, index) => {
+    return this.board.reduce((players, cell) => {
       if (cell !== '') {
         players[this.playerId] = this.playerSymbol;
       }
@@ -164,5 +171,32 @@ export class HomePage implements OnInit {
       this.userCount = count;
       this.readyToPlay = this.userCount >= 2;
     });
+  }
+
+  /**
+   * @description Verifica se um jogador é o vencedor.
+   * @param score - Pontuação do jogador.
+   * @param player - Nome do jogador.
+   */
+  public async checkWinner(score: number, player: string): Promise<void> {
+    if (score > this.previousScores[player]) {
+      this.previousScores[player] = score;
+      await this.showAlert(player, 'foi o vencedor', 'Vencedor');
+    }
+  }
+
+  /**
+   * @description Exibe um alerta utilizando o AlertController do Ionic.
+   * @param player - Nome do jogador.
+   * @param message - Mensagem do alerta.
+   * @param title - Título do alerta.
+   */
+  public async showAlert(player: string, message: string, title: string): Promise<void> {
+    const alert = await this.alertController.create({
+      header: title,
+      message: `O ${player} ${message}`,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }

@@ -17,6 +17,8 @@ export class GameService {
   roomFull$ = this.roomFullSubject.asObservable();
   userCount$ = this.userCountSubject.asObservable();
 
+  constructor() { }
+
   /**
    * @description Conecta ao servidor WebSocket e configura os manipuladores de eventos.
    */
